@@ -1,0 +1,5 @@
+# True if debug messages should be logged.
+debug: false
+
+# Page size in /ec list.
+page_size: 10

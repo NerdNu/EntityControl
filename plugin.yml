@@ -1,0 +1,26 @@
+name: EntityControl
+version: 0.1.0
+author: totemo
+authors: [totemo]
+description: Fix non-decaying leaves of WorldPainter'd trees.
+website: http://github.com/totemo/EntityControl
+depend: []
+main: io.totemo.ec.EntityControl
+permissions:
+  entitycontrol.admin:
+    description: Permission to administer the plugin.
+    default: op
+  entitycontrol.user:
+    description: Permission to count entities.
+    default: op
+commands:
+  ec:
+    description: Manage entity counts.
+    permission: entitycontrol.user
+    usage: |
+      /<command> help - Show usage help.
+      /<command> reload - Reload the configuration.
+      /<command> debug - Toggle debug messages.
+      /<command> count [<world>] - Count entities in specified world, or the player's current world if not specified.
+      /<command> list [<world>] - List in the specified world or the player's current world.
+      /<command> tp [<world>] id - Teleport to group by ID in optionally specified world.
