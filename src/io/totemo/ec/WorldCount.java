@@ -133,7 +133,7 @@ public class WorldCount {
      * List entities to the sender in descending order of occcurence frequency.
      *
      * @param sender the command sender.
-     * @paran page the 1-based page number of output to show.
+     * @param page the 1-based page number of output to show.
      */
     public void list(CommandSender sender, int page) {
         sortGroups(sender);
@@ -185,8 +185,8 @@ public class WorldCount {
             EntityGroup group = _sortedGroups[index];
             if (sender instanceof Player) {
                 Player player = (Player) sender;
-                player.teleport(group.getLocation());
                 Location loc = group.getLocation();
+                player.teleport(loc);
                 sender.sendMessage(String.format("%sTeleporting you to %s%d %s%s %sat (%d, %d, %d).",
                     ChatColor.GOLD.toString(),
                     ChatColor.GREEN.toString(), group.getCount(),
@@ -211,7 +211,7 @@ public class WorldCount {
             for (ChunkCount chunkCount : _chunkCounts) {
                 for (int i = 0; i <= 15; ++i) {
                     if (chunkCount.hasBox(i)) {
-                        chunkCount.getBox(i).addEntityGroups(groups);
+                        chunkCount.getBox(i).addEntityGroupsTo(groups);
                     }
                 }
             }
@@ -241,7 +241,7 @@ public class WorldCount {
 
     /**
      * Sorted array of {@link EntityGroup}s which is cached by list() the first
-     * time the groups are sorted.
+     * time the groups are sorted (see {@link #sortGroups(CommandSender)}).
      *
      * The cache is invalidated by clear(). This is stored as an array partly
      * because ArrayList<>.sort() is not available in Java 7, which the server

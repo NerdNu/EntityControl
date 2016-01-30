@@ -10,7 +10,7 @@ import org.bukkit.entity.EntityType;
 
 // ----------------------------------------------------------------------------
 /**
- * Holds the entity counts for 1/16th of a Chunk as a the 16x16x16 box.
+ * Holds the entity counts for 1/16th of a Chunk as a 16x16x16 box.
  *
  * An instance of this class will not exist for a particular Location unless the
  * box contains at least one entity.
@@ -46,9 +46,8 @@ public class Box16Count {
                 _averageLocation[typeOrdinal] = average;
 
                 // Change the representative location to that of the new entity
-                // only
-                // if the new entity is closer to the new average that the old
-                // representative location (another entity location).
+                // only if the new entity is closer to the new average that the
+                // old representative location (another entity location).
                 if (average.distanceSquared(entityLoc) < average.distanceSquared(_representativeLocation[typeOrdinal])) {
                     _representativeLocation[typeOrdinal] = entityLoc;
                 }
@@ -81,7 +80,7 @@ public class Box16Count {
      *
      * @param groups ArrayList<> of EntityGroups to be added to.
      */
-    public void addEntityGroups(ArrayList<EntityGroup> groups) {
+    public void addEntityGroupsTo(ArrayList<EntityGroup> groups) {
         for (EntityType type : EntityCounts.ENTITY_TYPES) {
             int count = _counts.getTotal(type);
             if (count != 0) {
@@ -91,7 +90,6 @@ public class Box16Count {
     }
 
     // ------------------------------------------------------------------------
-
     /**
      * Entity counts indexed by entity type.
      */

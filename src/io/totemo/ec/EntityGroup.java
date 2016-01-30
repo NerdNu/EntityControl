@@ -9,7 +9,8 @@ import org.bukkit.entity.EntityType;
  * used as a teleport target.
  *
  * There is one instance of this class for every non-zero count of entities in
- * any existent Box16Count. These objects are sorted for use in /ec list.
+ * any existent {@link Box16Count}. These objects are sorted for use in /ec
+ * list.
  */
 public final class EntityGroup {
     // ------------------------------------------------------------------------
@@ -17,7 +18,7 @@ public final class EntityGroup {
      * Convenience constructor.
      *
      * @param type entity type.
-     * @param count corresponding total number of entities in the World.
+     * @param count corresponding total number of entities in the 16x16x16 box.
      * @param location representative location to use as a teleport target.
      */
     public EntityGroup(EntityType type, int count, Location location) {

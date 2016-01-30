@@ -40,7 +40,7 @@ public class ChunkCount {
     /**
      * Return the box with the specified index.
      *
-     * The Box16Count instance is created on demand.
+     * The {@link Box16Count} instance is created on demand.
      *
      * @param index the index in the range [0,15], corresponding to Y
      *        coordinates in the range [index*16, index*16+15].
