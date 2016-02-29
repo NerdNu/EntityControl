@@ -1,11 +1,12 @@
-name: EntityControl
-version: 0.1.0
+name: ${project.name}
+version: ${project.version}
+description: ${project.description}
+website: ${project.url}
+database: false
 author: totemo
 authors: [totemo]
-description: Fix non-decaying leaves of WorldPainter'd trees.
-website: http://github.com/totemo/EntityControl
-depend: []
 main: io.totemo.ec.EntityControl
+
 permissions:
   entitycontrol.admin:
     description: Permission to administer the plugin.
@@ -13,6 +14,7 @@ permissions:
   entitycontrol.user:
     description: Permission to count entities.
     default: op
+
 commands:
   ec:
     description: Manage entity counts.
