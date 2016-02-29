@@ -20,6 +20,11 @@ public class ChunkCount {
         for (Entity entity : chunk.getEntities()) {
             Location loc = entity.getLocation();
             int boxIndex = loc.getBlockY() / 16;
+            if (boxIndex < 0) {
+                boxIndex = 0;
+            } else if (boxIndex > 15) {
+                boxIndex = 15;
+            }
             getBox(boxIndex).countEntity(entity);
         }
     }
