@@ -53,7 +53,7 @@ public class WorldCount {
      * Count all entities in the specified chunk in the World corresponding to
      * this WorldCount instance.
      *
-     * @param chunk
+     * @param chunk the counted chunk.
      */
     public void countChunk(Chunk chunk) {
         _chunkCounts.add(new ChunkCount(chunk));
@@ -88,6 +88,7 @@ public class WorldCount {
      * @param sender the command sender to be sent messages.
      */
     public void summarise(CommandSender sender) {
+        // Add number of entities in all boxes of all chunks to accumulator.
         EntityCounts accumulator = new EntityCounts();
         for (ChunkCount chunkCount : _chunkCounts) {
             for (int i = 0; i <= 15; ++i) {
@@ -148,16 +149,16 @@ public class WorldCount {
                 sender.sendMessage(ChatColor.RED + "Valid page numbers are 1 to " + pageCount + ".");
             }
         } else {
-            String header = ChatColor.translateAlternateColorCodes('&',
-                String.format("&f---------- &6Page &e%d &6of &e%d &f----------", page, pageCount));
+            String header = ChatColor.translateAlternateColorCodes('&', String.format("&f---------- &6Page &e%d &6of &e%d &f----------",
+                                                                                      page, pageCount));
             sender.sendMessage(header);
             for (int i = (page - 1) * PAGE_SIZE; i < Math.min(page * PAGE_SIZE, _sortedGroups.length); ++i) {
                 Location loc = _sortedGroups[i].getLocation();
                 String line = String.format("%s(% 3d) %s% 3d %s%-18s %s(%d, %d, %d)",
-                    ChatColor.GOLD.toString(), i + 1,
-                    ChatColor.GREEN.toString(), _sortedGroups[i].getCount(),
-                    ChatColor.YELLOW.toString(), _sortedGroups[i].getEntityType().name(),
-                    ChatColor.GOLD.toString(), loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
+                                            ChatColor.GOLD.toString(), i + 1,
+                                            ChatColor.GREEN.toString(), _sortedGroups[i].getCount(),
+                                            ChatColor.YELLOW.toString(), _sortedGroups[i].getEntityType().name(),
+                                            ChatColor.GOLD.toString(), loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
                 sender.sendMessage(line);
             }
             sender.sendMessage(header);
@@ -188,10 +189,10 @@ public class WorldCount {
                 Location loc = group.getLocation();
                 player.teleport(loc);
                 sender.sendMessage(String.format("%sTeleporting you to %s%d %s%s %sat (%d, %d, %d).",
-                    ChatColor.GOLD.toString(),
-                    ChatColor.GREEN.toString(), group.getCount(),
-                    ChatColor.YELLOW.toString(), group.getEntityType().name(),
-                    ChatColor.GOLD.toString(), loc.getBlockX(), loc.getBlockY(), loc.getBlockZ()));
+                                                 ChatColor.GOLD.toString(),
+                                                 ChatColor.GREEN.toString(), group.getCount(),
+                                                 ChatColor.YELLOW.toString(), group.getEntityType().name(),
+                                                 ChatColor.GOLD.toString(), loc.getBlockX(), loc.getBlockY(), loc.getBlockZ()));
             }
         }
     } // tp
@@ -206,8 +207,11 @@ public class WorldCount {
         if (_sortedGroups == null) {
             long start = System.currentTimeMillis();
 
-            // Sort EntityGroups by entity count and cache the result.
-            ArrayList<EntityGroup> groups = new ArrayList<EntityGroup>(_chunkCounts.size());
+            // For all chunks, and for all 16 boxes in a chunk, for each
+            // EntityType that has a non-zero count append an EntityGroup. Note
+            // that groups is initialised with a certain capacity, but starts
+            // with 0 size.
+            ArrayList<EntityGroup> groups = new ArrayList<>(_chunkCounts.size());
             for (ChunkCount chunkCount : _chunkCounts) {
                 for (int i = 0; i <= 15; ++i) {
                     if (chunkCount.hasBox(i)) {
@@ -216,19 +220,15 @@ public class WorldCount {
                 }
             }
 
-            // Would you believe ArrayList<>.sort() didn't exist until Java 8?
-            _sortedGroups = new EntityGroup[groups.size()];
-            groups.toArray(_sortedGroups);
-            Arrays.sort(_sortedGroups, new Comparator<EntityGroup>() {
-                @Override
-                public int compare(EntityGroup left, EntityGroup right) {
-                    return right.getCount() - left.getCount();
-                }
-            });
+            // Exclude groups of ITEM_FRAME and sort descending by count.
+            _sortedGroups = groups.stream()
+            .filter(g -> g.getEntityType() != EntityType.ITEM_FRAME)
+            .sorted((l, r) -> r.getCount() - l.getCount())
+            .toArray(size -> new EntityGroup[size]);
 
             long elapsedMillis = System.currentTimeMillis() - start;
             sender.sendMessage(ChatColor.GOLD + String.format("Sorted %d entity groups in %d milliseconds.",
-                _sortedGroups.length, elapsedMillis));
+                                                              _sortedGroups.length, elapsedMillis));
         }
     } // sortGroups
 
