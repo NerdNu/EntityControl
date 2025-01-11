@@ -6,7 +6,7 @@ database: false
 author: totemo
 authors: [totemo]
 main: io.totemo.ec.EntityControl
-api-version: 1.15
+api-version: 1.21
 
 permissions:
   entitycontrol.admin:
